@@ -74,16 +74,6 @@ const ExpenseEntries: React.FC<ExpenseEntriesProps_int> = ({
                 );
               })}
               {/* map will be used for dynamic data */}
-
-              <tr className="odd:bg-slate-600 odd:text-slate-200 hover:bg-slate-300 hover:text-slate-900 even:bg-[#d4a373] even:text-slate-800">
-                <td className="border">2</td>
-                <td className="border">
-                  {moment(new Date()).format("do MMM  yy")}
-                </td>
-                <td className="border">500</td>
-                <td className="border">Tea</td>
-                <td className="border">food</td>
-              </tr>
             </tbody>
           </table>
         </div>

@@ -5,6 +5,7 @@ import axiosInt from "../../helper/ApiInstance";
 import { ApiResponse } from "../../types/ApiTypes";
 import { Category_type, SingleExpense } from "../../types/Expense";
 import ExpenseEntries from "./ExpenseEntries";
+import ExpensePiChart from "./ExpensePiChart";
 
 const Expense = () => {
   const [expenseGetData, setExpenseGetData] = useState<SingleExpense[]>();
@@ -73,10 +74,6 @@ const Expense = () => {
     <div className="w-full h-full flex flex-col md:flex-row gap-2 box-border">
       {/* left part */}
       <div className="w-full md:w-fit h-auto flex flex-col items-center sm:flex-row  md:flex-col">
-        {/* expense form */}
-        <div className="max-w-[400px] mt-4">
-          <ExpenseForm callBack={() => getExpenseData()} />
-        </div>
         {/* expense details */}
         <div className="max-w-[400px] h-auto">
           <ExpenseDetails
@@ -85,6 +82,10 @@ const Expense = () => {
             totalExpense={totalExpense}
             expenseArray={expenseGetData}
           />
+        </div>
+        {/* expense form */}
+        <div className="max-w-[400px] mt-4">
+          <ExpenseForm callBack={() => getExpenseData()} />
         </div>
       </div>
 
