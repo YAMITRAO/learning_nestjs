@@ -10,7 +10,11 @@ export interface Login_Credentails {
 export interface LoginResponse {
   message: string;
   token: string;
-  data: {};
+  data: {
+    userName: string;
+    userEmail: string;
+    userId: string;
+  };
 }
 
 // signup

@@ -1,16 +1,23 @@
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Login_Credentails, LoginResponse } from "../../types/AuthTypes";
 import axiosInt from "../../helper/ApiInstance";
 import { toast } from "react-toastify";
 import { ApiResponse } from "../../types/ApiTypes";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import UserContext from "../../context/UserContext";
 
 const Login = () => {
+  // context to store data at login time
+  const { dispatch } = useContext(UserContext);
   const [enteredCredentials, setEnteredCredentials] =
     useState<Login_Credentails>({
       userEmail: "",
       password: "",
     });
+
+  // navigation hook
+  let navigate = useNavigate();
 
   // input change handler
   const onChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -29,7 +36,13 @@ const Login = () => {
         }
       );
       console.log("response is", response.data);
+      localStorage.setItem("token", response.data.data.token);
       toast.success(response.data.message || "Waw!!!Successfully got response");
+      dispatch({
+        type: "USER_LOGIN",
+        payload: { ...response.data.data.data, isAuth: true },
+      });
+      navigate("/");
     } catch (error) {
       console.log(error);
       if (error instanceof Error) {
@@ -45,6 +58,35 @@ const Login = () => {
       }
     }
   };
+
+  // get user using auth token
+  // const getUser = async () => {
+  //   try {
+  //     const response = await axiosInt.get("/user/get-user", {
+  //       headers: {
+  //         Authorization: `Bearer ${localStorage?.getItem("token")}`,
+  //       },
+  //     });
+
+  //     console.log("Get user response is", response);
+  //     // toast.success(response.data.message || "Token login success");
+  //     navigate("/");
+  //   } catch (error) {
+  //     console.log(error);
+  //     if (axios.isAxiosError(error)) {
+  //       toast.error(
+  //         Array.isArray(error.response?.data.message)
+  //           ? error.response?.data.message[0]
+  //           : error.response?.data.message
+  //       );
+  //       return;
+  //     }
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   getUser();
+  // }, []);
 
   return (
     <div>
