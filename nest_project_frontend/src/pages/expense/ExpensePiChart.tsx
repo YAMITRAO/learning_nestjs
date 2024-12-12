@@ -2,14 +2,14 @@ import React from "react";
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from "recharts";
 
 // Example data
-const data1 = [
-  { name: "Category 1", value: 30 },
-  { name: "Category 2", value: 20 },
-  { name: "Category 3", value: 25 },
-  { name: "Category 4", value: 15 },
-  { name: "Category 5", value: 10 },
-  { name: "Category 5", value: 20 },
-];
+// const data1 = [
+//   { name: "Category 1", value: 30 },
+//   { name: "Category 2", value: 20 },
+//   { name: "Category 3", value: 25 },
+//   { name: "Category 4", value: 15 },
+//   { name: "Category 5", value: 10 },
+//   { name: "Category 5", value: 20 },
+// ];
 
 // Define colors for the pie segments
 const COLORS = [

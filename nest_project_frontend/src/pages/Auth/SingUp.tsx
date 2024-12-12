@@ -4,7 +4,7 @@ import axiosInt from "../../helper/ApiInstance";
 import { ApiResponse } from "../../types/ApiTypes";
 import { SignUp_Credentials, SignUpResponse } from "../../types/AuthTypes";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const SingUp = () => {
   const navigate = useNavigate();
@@ -156,6 +156,18 @@ const SingUp = () => {
                     >
                       Confirm Password
                     </label>
+                  </div>
+                  {/* have na account */}
+                  <div className="w-full text-sm">
+                    <div className="w-fit">
+                      Already have an account,{" "}
+                      <Link
+                        to="/login"
+                        className=" text-green-600 hover:underline"
+                      >
+                        Login
+                      </Link>
+                    </div>
                   </div>
                   <div className="relative">
                     <button

@@ -1,4 +1,8 @@
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import {
+  createBrowserRouter,
+  RouterProvider,
+  useNavigate,
+} from "react-router-dom";
 import "./App.css";
 // import router from "./routes/Index";
 import { toast, ToastContainer } from "react-toastify";
@@ -10,13 +14,15 @@ import axios from "axios";
 import { ApiResponse } from "./types/ApiTypes";
 import { UserDetails_int } from "./types/App";
 import Layout from "./components/Layout";
-import Home from "./pages/Home/Home";
+// import Home from "./pages/Home/Home";
 import Login from "./pages/Auth/Login";
 import SingUp from "./pages/Auth/SingUp";
 import Expense from "./pages/expense/Expense";
+import ResetPassword from "./pages/Auth/ResetPassword";
 
 function App() {
   const { state, dispatch } = useContext(UserContext);
+  // const navigate = useNavigate();
   // routes
   const router = createBrowserRouter([
     {
@@ -34,6 +40,10 @@ function App() {
         {
           path: "signup",
           element: <SingUp />,
+        },
+        {
+          path: "reset-password",
+          element: <ResetPassword />,
         },
       ],
     },
@@ -74,10 +84,26 @@ function App() {
   };
 
   useEffect(() => {
-    getUser();
+    if (localStorage.getItem("token")) {
+      getUser();
+    }
   }, []);
   return (
     <div>
+      {/* logout button fixed */}
+      {state.isAuth && (
+        <button
+          className="fixed z-50 top-1 right-1 p-1 px-2 bg-red-800 hover:bg-red-900 transition-all rounded"
+          onClick={() => {
+            //  remove token and  context data from local storage
+            localStorage.removeItem("token");
+            dispatch({ type: "USER_LOGOUT" });
+            // navigate("/login");
+          }}
+        >
+          Logout
+        </button>
+      )}
       {/* toast to print messages */}
       <ToastContainer />
       {/* react-routing  */}

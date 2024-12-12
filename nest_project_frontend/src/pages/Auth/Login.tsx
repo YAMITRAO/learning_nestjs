@@ -4,7 +4,7 @@ import axiosInt from "../../helper/ApiInstance";
 import { toast } from "react-toastify";
 import { ApiResponse } from "../../types/ApiTypes";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import UserContext from "../../context/UserContext";
 
 const Login = () => {
@@ -138,6 +138,30 @@ const Login = () => {
                     >
                       Password
                     </label>
+
+                    {/* forgot password and do not have an account links */}
+                    <div className="w-full font-mono mt-2">
+                      {/* forgot password */}
+                      <div className="text-sm ">
+                        <Link to="/reset-password">
+                          <span className="text-red-500 hover:underline">
+                            Forgot password
+                          </span>
+                        </Link>
+                      </div>
+
+                      {/* Do not have an account  */}
+                      <div className="text-sm  ">
+                        <Link to="/signup">
+                          <span className=" ">
+                            Don't have an account?{" "}
+                            <span className="text-[#2fbee2] hover:underline">
+                              Sign Up
+                            </span>
+                          </span>
+                        </Link>
+                      </div>
+                    </div>
                   </div>
                   <div className="relative">
                     <button

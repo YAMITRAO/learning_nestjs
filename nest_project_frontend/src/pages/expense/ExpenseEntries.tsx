@@ -1,24 +1,32 @@
-import moment from "moment";
 import React, { useState } from "react";
 import { ExpenseEntriesProps_int } from "../../types/Expense";
+import EntryCard from "./EntryCard";
+import {
+  categoryListArray,
+  categoryListArrayIncome,
+} from "../../helper/CtaegotyList";
 
 const ExpenseEntries: React.FC<ExpenseEntriesProps_int> = ({
   expenseArray,
   incomeArray,
+  onTypeSelection,
+  callBack,
 }) => {
   const [isExpense, setIsExpense] = useState(true);
+  const [categoryList, setCategoryList] = useState([...categoryListArray]);
   console.log("expense array is", expenseArray);
   console.log("income array is", incomeArray);
+
   return (
-    <div className="w-full h-full ">
+    <div className="w-full h-full  mt-4 ">
       {/* entries container */}
-      <div className="h-full w-full flex flex-col gap-1 p-2 ">
+      <div className="h-full w-full flex flex-col gap-1  ">
         {/* expense entry */}
         <div className="w-full h-fit text-center flex flex-col ">
           {/* title */}
-          <div className="font-medium text-xl font-mono my-2">Entries</div>
+          <div className="font-medium text-xl font-mono ">Entries</div>
           {/* filter selection */}
-          <div className="w-fit flex gap-2 py-2 ">
+          <div className="w-fit flex gap-2 mb-1 ">
             {/* expense selection */}
             <div className="w-fit flex gap-1">
               <input
@@ -27,7 +35,13 @@ const ExpenseEntries: React.FC<ExpenseEntriesProps_int> = ({
                 value="expense"
                 className="peer"
                 checked={isExpense}
-                onChange={() => setIsExpense(true)}
+                onChange={() => {
+                  setIsExpense(true);
+                  // setting category list according to expense and that is used at the edit entry time
+                  setCategoryList([...categoryListArray]);
+                  // to chnage graph from expense component
+                  onTypeSelection(true);
+                }}
               />
               <label>Expense</label>
             </div>
@@ -40,7 +54,12 @@ const ExpenseEntries: React.FC<ExpenseEntriesProps_int> = ({
                 value="income"
                 className="peer"
                 checked={!isExpense}
-                onChange={() => setIsExpense(false)}
+                onChange={() => {
+                  setIsExpense(false);
+                  // setting category list according to 'income' and that is used at the edit entry time
+                  setCategoryList([...categoryListArrayIncome]);
+                  onTypeSelection(false);
+                }}
               />
               <label>Income</label>
             </div>
@@ -54,23 +73,19 @@ const ExpenseEntries: React.FC<ExpenseEntriesProps_int> = ({
                 <th className="border">Amount</th>
                 <th className="border">Purpose</th>
                 <th className="border">Category</th>
+                <th className="border">Actions</th>
               </tr>
             </thead>
             <tbody>
               {(isExpense ? expenseArray : incomeArray).map((val, index) => {
                 return (
-                  <tr
+                  <EntryCard
+                    categoryListArr={categoryList}
+                    val={val}
+                    index={index}
                     key={val.expenseDesc + index}
-                    className="odd:bg-slate-600 odd:text-slate-200 hover:bg-slate-300 hover:text-slate-900 even:bg-[#d4a373] even:text-slate-800"
-                  >
-                    <td className="border">{index + 1}</td>
-                    <td className="border">
-                      {moment(val.createdAt).format("do MMM  yy")}
-                    </td>
-                    <td className="border">{val.expenseAmount}</td>
-                    <td className="border">{val.expenseDesc}</td>
-                    <td className="border">{val.expenseCategory}</td>
-                  </tr>
+                    callBack={callBack}
+                  />
                 );
               })}
               {/* map will be used for dynamic data */}

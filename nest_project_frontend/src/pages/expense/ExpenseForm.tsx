@@ -6,16 +6,13 @@ import {
 import axiosInt from "../../helper/ApiInstance";
 import axios from "axios";
 import { toast } from "react-toastify";
+import {
+  categoryListArray,
+  categoryListArrayIncome,
+} from "../../helper/CtaegotyList";
 
 const ExpenseForm: React.FC<ExpenseFormProps_int> = ({ callBack }) => {
-  const [categoryList] = useState([
-    "other",
-    "food",
-    "fashion",
-    "beauty",
-    "education",
-    "households",
-  ]);
+  const [categoryList, setCategoryList] = useState([...categoryListArray]);
 
   const [expenseFormData, setExpenseFormData] = useState<ExpenseDataToApi_int>({
     expenseType: "expense",
@@ -72,9 +69,9 @@ const ExpenseForm: React.FC<ExpenseFormProps_int> = ({ callBack }) => {
   };
 
   return (
-    <div className="w-full p-2">
+    <div className="w-[400px] h-auto px-2">
       {/* Form container */}
-      <div className="dark:bg-slate-100 dark:text-slate-700 w-full p-4 rounded">
+      <div className="dark:bg-slate-100 dark:text-slate-700 w-full h-full rounded p-2 ">
         <form className="w-full" onSubmit={formSubmithandler}>
           {/* top to select income or expense */}
           <div className="flex gap-4 justify-center">
@@ -88,7 +85,11 @@ const ExpenseForm: React.FC<ExpenseFormProps_int> = ({ callBack }) => {
                   expenseFormData.expenseType === "expense" ? true : false
                 }
                 className="peer"
-                onChange={inputChangeHandler}
+                onChange={(e) => {
+                  inputChangeHandler(e);
+                  // update category list according to expense
+                  setCategoryList([...categoryListArray]);
+                }}
                 required
               />
               <label className="text-slate-500 font-medium  peer-focus:text-slate-600 text-center ">
@@ -103,7 +104,11 @@ const ExpenseForm: React.FC<ExpenseFormProps_int> = ({ callBack }) => {
                 name="expenseType"
                 value="income"
                 className="peer"
-                onChange={inputChangeHandler}
+                onChange={(e) => {
+                  inputChangeHandler(e);
+                  // update category list according to income
+                  setCategoryList([...categoryListArrayIncome]);
+                }}
                 required
               />
               <label className="text-slate-500 font-medium  peer-focus:text-slate-600 text-center ">

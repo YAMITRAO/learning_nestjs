@@ -27,3 +27,9 @@ export interface SignUpResponse {
   message: string;
   data: {};
 }
+
+// reset password interface
+export interface ResetPasswordApi_int extends Login_Credentails {
+  otp: string;
+  confirmPassword: string;
+}

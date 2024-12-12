@@ -27,14 +27,7 @@ export type Category_type = "food" | "fashion" | "other";
 export interface ExpenseDetailsProps_int {
   totalExpense: number;
   totalIncome: number;
-  categoryStack: {
-    food: number;
-    education: number;
-    other: number;
-    beauty: number;
-    households: number;
-    fashion: number;
-  };
+  categoryStack: Record<string, number>;
   incomeArray?: SingleExpense[];
   expenseArray?: SingleExpense[];
   callBack?: () => void;
@@ -49,4 +42,14 @@ export interface ExpenseFormProps_int {
 export interface ExpenseEntriesProps_int {
   incomeArray: SingleExpense[];
   expenseArray: SingleExpense[];
+  onTypeSelection: (data: boolean) => void;
+  callBack?: () => void;
+}
+
+// EntryCard props interface
+export interface EntryCardProps_int {
+  val: SingleExpense;
+  index: number;
+  categoryListArr: string[];
+  callBack?: () => void;
 }
