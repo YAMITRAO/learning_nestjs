@@ -75,7 +75,7 @@ const PasswordReset = () => {
           setIsOtpValidated(true);
         } else {
           validateCredentials(); //to validate password before backend api check
-          const response = await axiosInt.post("/user/change-password", {
+          const response = await axiosInt.put("/user/change-password", {
             ...enteredCredentials,
           });
           console.log("Response is", response);
@@ -95,7 +95,7 @@ const PasswordReset = () => {
   const resendOtpHandler = async () => {
     try {
       setIsResendRequired(false);
-      const response = await axiosInt.post("/user/password-reset", {
+      const response = await axiosInt.post("/user/send-otp", {
         ...enteredCredentials,
       });
       console.log("Response is", response);
