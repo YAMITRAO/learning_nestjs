@@ -5,10 +5,10 @@ const Layout = () => {
     // main div h-screen w-screen
     <div className="h-screen w-screen">
       {/* header */}
-      <div></div>
+      <div className="h-[60px]"></div>
 
       {/* main */}
-      <main>
+      <main className="w-full h-auto">
         <Outlet />
       </main>
     </div>

@@ -10,6 +10,7 @@ export interface User {
   userEmail: string;
   userId: string;
   isAuth: boolean;
+  accessType: string;
 }
 
 type UserAction =
@@ -26,6 +27,7 @@ export const initialValues: User = {
   userName: "",
   userEmail: "",
   userId: "",
+  accessType: "",
   isAuth: false,
 };
 

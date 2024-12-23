@@ -15,10 +15,13 @@ import Login from "./pages/Auth/Login";
 import SingUp from "./pages/Auth/SingUp";
 import Expense from "./pages/expense/Expense";
 import ResetPassword from "./pages/Auth/ResetPassword";
+import Test from "./Test";
+import Resource from "./pages/Resource/Resource";
 
 function App() {
   const { state, dispatch } = useContext(UserContext);
-  // const navigate = useNavigate();
+  console.log("state is ", state);
+
   // routes
   const router = createBrowserRouter([
     {
@@ -27,8 +30,36 @@ function App() {
       children: [
         {
           path: "/",
-          element: state.isAuth ? <Expense /> : <Login />,
+          element: state.isAuth ? (
+            state.accessType === "admin" ? (
+              <Expense />
+            ) : (
+              <Resource />
+            )
+          ) : (
+            <Login />
+          ),
         },
+
+        {
+          path: "/expenses",
+          element:
+            state.isAuth && state.accessType !== "admin" ? (
+              <Expense />
+            ) : (
+              <Login />
+            ),
+        },
+        {
+          path: "/resources",
+          element:
+            state.isAuth && state.accessType === "admin" ? (
+              <Resource />
+            ) : (
+              <Login />
+            ),
+        },
+
         {
           path: "login",
           element: <Login />,
@@ -41,7 +72,23 @@ function App() {
           path: "reset-password",
           element: <ResetPassword />,
         },
+        {
+          path: "*",
+          element: state.isAuth ? (
+            state.accessType === "admin" ? (
+              <Expense />
+            ) : (
+              <Resource />
+            )
+          ) : (
+            <Login />
+          ),
+        },
       ],
+    },
+    {
+      path: "test",
+      element: <Test />,
     },
   ]);
 
@@ -59,13 +106,11 @@ function App() {
 
       console.log("Get user response is", response.data.data);
       // toast.success(response.data.message || "Token login success");
-      console.log("dispatch is called");
+      // console.log("dispatch is called");
       dispatch({
         type: "USER_LOGIN",
         payload: { ...response.data.data, isAuth: true },
       });
-
-      //  navigate("/");
     } catch (error) {
       console.log(error);
       if (axios.isAxiosError(error)) {
@@ -84,10 +129,11 @@ function App() {
       getUser();
     }
   }, []);
+
   return (
     <div>
       {/* logout button fixed */}
-      {state.isAuth && (
+      {state?.isAuth && (
         <button
           className="fixed z-50 top-1 right-1 p-1 px-2 bg-red-800 hover:bg-red-900 transition-all rounded"
           onClick={() => {

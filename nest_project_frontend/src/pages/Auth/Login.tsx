@@ -59,43 +59,14 @@ const Login = () => {
     }
   };
 
-  // get user using auth token
-  // const getUser = async () => {
-  //   try {
-  //     const response = await axiosInt.get("/user/get-user", {
-  //       headers: {
-  //         Authorization: `Bearer ${localStorage?.getItem("token")}`,
-  //       },
-  //     });
-
-  //     console.log("Get user response is", response);
-  //     // toast.success(response.data.message || "Token login success");
-  //     navigate("/");
-  //   } catch (error) {
-  //     console.log(error);
-  //     if (axios.isAxiosError(error)) {
-  //       toast.error(
-  //         Array.isArray(error.response?.data.message)
-  //           ? error.response?.data.message[0]
-  //           : error.response?.data.message
-  //       );
-  //       return;
-  //     }
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   getUser();
-  // }, []);
-
   return (
     <div>
-      <div className="min-h-screen dark:bg-bgDark bg-gray-100 py-6 flex flex-col justify-center sm:py-12 dark:text-textLight">
+      <div className="min-h-screen dark:bg-bgDark bg-gray-100 py-6 flex flex-col justify-center m-4 sm:m-0 sm:py-12 dark:text-textLight">
         <div className="relative py-3 sm:max-w-xl sm:mx-auto">
           {/* background  */}
-          <div className="absolute inset-0 bg-gradient-to-r from-cyan-400 to-sky-500 dark:bg-gradient-to-t dark:from-[#e7940f] dark:to-[#219ebc]  transform -skew-y-6 sm:skew-y-0 sm:-rotate-6 sm:rounded-3xl"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-cyan-400 to-sky-500 dark:bg-gradient-to-t dark:from-[#e7940f] dark:to-[#219ebc]  transform -skew-y-6 sm:skew-y-0 sm:-rotate-6 -rotate-6 rounded-3xl"></div>
           {/* login details */}
-          <div className="relative px-4 py-10 dark:bg-bgDarkSecondary dark:opacity-85 bg-white shadow-lg sm:rounded-3xl sm:p-20 dark:shadow-[1px_1px_2px_rgba(255,244,244)] animate-bounce-limited  ">
+          <div className="relative px-4 py-10 dark:bg-bgDarkSecondary dark:opacity-85 bg-white shadow-lg  rounded-3xl sm:p-20 dark:shadow-[1px_1px_2px_rgba(255,244,244)] animate-bounce-limited  ">
             {/* details input  */}
             <div className="max-w-md mx-auto">
               <div>
