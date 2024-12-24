@@ -23,16 +23,18 @@ const ExpenseDetails: React.FC<ExpenseDetailsProps_int> = ({
 
   return (
     <div className=" w-[400px] h-auto  flex flex-col gap-2 ">
-      <div className="w-full h-[300px]">
-        {/* title graph visible only when values are avialable */}
-        {modifiedcategoryList?.length > 0 && (
-          <div className="w-full text-center text-lg font-mono text-slate-400 bg-gradient-to-r  from-[#dde1e2] to-[#2bacc3] bg-clip-text text-transparent mb-2">
-            Category Graph
-          </div>
-        )}
-        {/* pi graph */}
-        <ExpensePiChart data={modifiedcategoryList} />
-      </div>
+      {modifiedcategoryList?.length > 0 && (
+        <div className="w-full h-[300px]">
+          {/* title graph visible only when values are avialable */}
+          {modifiedcategoryList?.length > 0 && (
+            <div className="w-full text-center text-lg font-mono text-slate-400 bg-gradient-to-r  from-[#dde1e2] to-[#2bacc3] bg-clip-text text-transparent mb-2">
+              Category Graph
+            </div>
+          )}
+          {/* pi graph */}
+          <ExpensePiChart data={modifiedcategoryList} />
+        </div>
+      )}
 
       {/* details container */}
       {false && (

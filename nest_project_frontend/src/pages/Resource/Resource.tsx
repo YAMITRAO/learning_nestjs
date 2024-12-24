@@ -1,20 +1,18 @@
 import { useEffect, useState } from "react";
 import { IoIosCloudDone } from "react-icons/io";
-import {
-  Resource_data_int,
-  Resource_response_user_int,
-} from "../../types/Resource";
+import { Resource_data_int } from "../../types/Resource";
 import axios from "axios";
 import { toast } from "react-toastify";
 import axiosInt from "../../helper/ApiInstance";
 import ViewResource from "./ViewResource";
-import { ApiResponse } from "../../types/ApiTypes";
 
 const Resource = () => {
   const [userEntries, setUserEntries] = useState<Resource_data_int>({
     category: "All",
     resourceLink: "",
   });
+
+  const [mount, setMount] = useState(false);
 
   // form submit handler
   const handelResourceFormSubmit = async (
@@ -49,6 +47,7 @@ const Resource = () => {
         category: "All",
         resourceLink: "",
       });
+      setMount((prev) => !prev);
     } catch (error) {
       if (axios.isAxiosError(error)) {
         toast.error(error.response?.data.message || "Sorry!!!Error Occured");
@@ -110,7 +109,7 @@ const Resource = () => {
       </form>
       {/* view resource */}
       <div className="w-[94%] h-auto mx-auto mt-8">
-        <ViewResource />
+        <ViewResource mountState={mount} />
       </div>
     </div>
   );

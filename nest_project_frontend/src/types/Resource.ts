@@ -5,7 +5,11 @@ export interface Resource_data_int {
 
 export interface Resource_response_user_int {
   _id: string;
-  createdBy: string;
+  createdBy: {
+    _id: string;
+    userName: string;
+    userEmail: string;
+  };
   category: string;
   resourceLink: string;
   isResourceMustWatch: boolean;
@@ -15,4 +19,9 @@ export interface Resource_response_user_int {
   isResourceVisitedByAdmin: boolean;
   createdAt?: Date;
   updatedAt?: Date;
+}
+
+// view resource interface
+export interface ViewResources_int {
+  mountState: boolean;
 }

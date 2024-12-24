@@ -1,12 +1,38 @@
 import axios from "axios";
 import axiosInt from "../../helper/ApiInstance";
 import { ApiResponse } from "../../types/ApiTypes";
-import { Resource_response_user_int } from "../../types/Resource";
+import {
+  Resource_response_user_int,
+  ViewResources_int,
+} from "../../types/Resource";
 import { toast } from "react-toastify";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+// start :- normal and filled
+import { FaRegStar } from "react-icons/fa";
+import { FaStar } from "react-icons/fa";
 
-const ViewResource = () => {
+// important :- normal and filled
+import { MdLabelImportantOutline } from "react-icons/md";
+import { MdLabelImportant } from "react-icons/md";
+
+// delete icon
+import { MdDelete } from "react-icons/md";
+// watch later icons: normal and filled
+import { MdOutlineWatchLater } from "react-icons/md";
+import { MdWatchLater } from "react-icons/md";
+
+import { IoSearchSharp } from "react-icons/io5";
+import { MdOutlineCategory } from "react-icons/md";
+
+import UserContext from "../../context/UserContext";
+
+const ViewResource: React.FC<ViewResources_int> = ({ mountState }) => {
+  // user details
+  const { state } = useContext(UserContext);
   const [resourceData, setResourceData] =
+    useState<Resource_response_user_int[]>();
+  // filtered Data
+  const [resourceFilterData, setResourceFilterData] =
     useState<Resource_response_user_int[]>();
   const getResourceData = async () => {
     try {
@@ -19,6 +45,7 @@ const ViewResource = () => {
       });
       console.log("Response is ", response.data.data);
       setResourceData(response.data.data);
+      setResourceFilterData(response.data.data);
     } catch (error) {
       console.log(error);
       if (axios.isAxiosError(error)) {
@@ -27,47 +54,150 @@ const ViewResource = () => {
     }
   };
 
+  // resource delete handler
+  const resourceDeleteHandler = async (
+    e: React.MouseEvent<HTMLButtonElement>
+  ) => {
+    console.log("Delete button is clicked", e.currentTarget.value);
+    const deleteDocId = e.currentTarget.value;
+    try {
+      await axiosInt.delete(`/resource/${deleteDocId}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage?.getItem("token")}`,
+        },
+      });
+      toast.success("Deleted Successfully");
+      getResourceData();
+    } catch (error) {
+      console.log(error);
+      if (axios.isAxiosError(error)) {
+        toast.error(error.response?.data.message || "System error");
+      }
+    }
+  };
+
+  // importent button select or remove handler
+  const handelImportant = async (id: string, status: boolean) => {
+    try {
+      console.log("Id is", id, status);
+      await axiosInt.put(
+        `/resource/important/${id}`,
+        {
+          status,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage?.getItem("token")}`,
+          },
+        }
+      );
+
+      getResourceData();
+    } catch (error) {
+      console.log(error);
+      if (axios.isAxiosError(error)) {
+        toast.error(error.response?.data.message);
+      }
+    }
+  };
+
+  // handel fvrt as star
+  const handelFvrt = async (id: string, status: boolean) => {
+    try {
+      console.log("Id is", id, status);
+      await axiosInt.put(
+        `/resource/favourite/${id}`,
+        {
+          status,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage?.getItem("token")}`,
+          },
+        }
+      );
+
+      getResourceData();
+    } catch (error) {
+      console.log(error);
+      if (axios.isAxiosError(error)) {
+        toast.error(error.response?.data.message);
+      }
+    }
+  };
+
+  // handel watchLater
+  const handelWatchLater = async (id: string, status: boolean) => {
+    try {
+      console.log("Id is", id, status);
+      await axiosInt.put(
+        `/resource/watchlater/${id}`,
+        {
+          status,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage?.getItem("token")}`,
+          },
+        }
+      );
+
+      getResourceData();
+    } catch (error) {
+      console.log(error);
+      if (axios.isAxiosError(error)) {
+        toast.error(error.response?.data.message);
+      }
+    }
+  };
+
+  // select filter data
+  const selectFilterDataHandler = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const filterValue = e.currentTarget.value;
+    console.log("Filter data is", filterValue);
+
+    let allResourceData = resourceData;
+    setResourceFilterData(
+      allResourceData?.filter((val) => {
+        if (filterValue === "important")
+          return val.isResourceMustWatch === true;
+        else if (filterValue === "watchlater")
+          return val.isResourceWatchLater === true;
+        else if (filterValue === "favourite")
+          return val.isResourceUserFvrt === true;
+        else return true;
+      })
+    );
+  };
+
   useEffect(() => {
     getResourceData();
-  }, []);
+  }, [mountState]);
   return (
     <div className="relative overflow-x-auto shadow-md sm:rounded-lg mt-2">
       {/* top filter and search div  */}
-      {false && (
-        <div className="flex flex-column sm:flex-row flex-wrap space-y-4 sm:space-y-0 items-center justify-between pb-4">
-          <div>
-            <button
+      {true && (
+        <div className="flex flex-column sm:flex-row  space-y-4 sm:space-y-0 items-center justify-between pb-4  ">
+          <div className="w-fit h-full ">
+            <div
               id="dropdownRadioButton"
               data-dropdown-toggle="dropdownRadio"
-              className="inline-flex items-center text-gray-500 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-3 py-1.5 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
-              type="button"
+              className="flex items-center text-gray-500 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100  font-medium rounded-lg text-sm px-3 py-1.5 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700  "
             >
-              <svg
-                className="w-3 h-3 text-gray-500 dark:text-gray-400 me-3"
-                aria-hidden="true"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="currentColor"
-                viewBox="0 0 20 20"
+              <span className="mr-1 text-lg text-slate-300">
+                <MdOutlineCategory />
+              </span>
+
+              <select
+                className="bg-transparent text-slate-400 border-none outline-none "
+                onChange={selectFilterDataHandler}
               >
-                <path d="M10 0a10 10 0 1 0 10 10A10.011 10.011 0 0 0 10 0Zm3.982 13.982a1 1 0 0 1-1.414 0l-3.274-3.274A1.012 1.012 0 0 1 9 10V6a1 1 0 0 1 2 0v3.586l2.982 2.982a1 1 0 0 1 0 1.414Z" />
-              </svg>
-              Last 30 days
-              <svg
-                className="w-2.5 h-2.5 ms-2.5"
-                aria-hidden="true"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 10 6"
-              >
-                <path
-                  stroke="currentColor"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="m1 1 4 4 4-4"
-                />
-              </svg>
-            </button>
+                <option value="all">All</option>
+                <option value="important">Important</option>
+                <option value="favourite">Favourite</option>
+                <option value="watchlater">Watch Later</option>
+              </select>
+            </div>
             {/* Dropdown menu */}
             <div
               id="dropdownRadio"
@@ -107,24 +237,12 @@ const ViewResource = () => {
               </ul>
             </div>
           </div>
-          <label htmlFor="table-search" className="sr-only">
-            Search
-          </label>
-          <div className="relative">
+
+          <div className="relative ">
             <div className="absolute inset-y-0 left-0 rtl:inset-r-0 rtl:right-0 flex items-center ps-3 pointer-events-none">
-              <svg
-                className="w-5 h-5 text-gray-500 dark:text-gray-400"
-                aria-hidden="true"
-                fill="currentColor"
-                viewBox="0 0 20 20"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
-                  clipRule="evenodd"
-                />
-              </svg>
+              <span className="text-xl">
+                <IoSearchSharp />
+              </span>
             </div>
             <input
               type="text"
@@ -141,53 +259,43 @@ const ViewResource = () => {
         <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
           <tr>
             <th scope="col" className="p-4">
-              {/* <div className="flex items-center">
-                <input
-                  id="checkbox-all-search"
-                  type="checkbox"
-                  className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                />
-                <label htmlFor="checkbox-all-search" className="sr-only">
-                  checkbox
-                </label>
-              </div> */}
               Sr.
             </th>
             <th scope="col" className="px-6 py-3">
               Resource Link
             </th>
-            {/* <th scope="col" className="px-6 py-3">
-              Category
-            </th> */}
-
+            {/* only for admin use */}
+            {state.accessType === "admin" && (
+              <th scope="col" className="px-6 py-3">
+                createdBy
+              </th>
+            )}
             <th scope="col" className="px-6 py-3">
               Action
             </th>
           </tr>
         </thead>
         <tbody>
-          {resourceData &&
-            resourceData.map((val, index) => {
+          {resourceFilterData &&
+            resourceFilterData.map((val, index) => {
               return (
-                <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                  <td className="w-4 p-4" key={val._id}>
-                    {/* <div className="flex items-center">
-                <input
-                  id="checkbox-table-search-1"
-                  type="checkbox"
-                  className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                />
-                <label htmlFor="checkbox-table-search-1" className="sr-only">
-                  checkbox
-                </label>
-              </div> */}
-                    {index}
-                  </td>
+                <tr
+                  className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
+                  key={val._id}
+                  style={{
+                    background: `${
+                      val.createdBy.userName !== state.userName &&
+                      state.accessType === "admin"
+                        ? "#073b4c"
+                        : ""
+                    }`,
+                  }}
+                >
+                  <td className="w-4 p-4">{index + 1}</td>
                   <td
                     scope="row"
                     className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
                   >
-                    {/* {val.resourceLink } */}
                     <a
                       href={val.resourceLink}
                       target="_blank"
@@ -196,14 +304,98 @@ const ViewResource = () => {
                       Click To Open
                     </a>
                   </td>
-
-                  <td className="px-6 py-4">
-                    <a
-                      href="#"
-                      className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+                  {/* only for admin */}
+                  {state.accessType == "admin" && (
+                    <td
+                      scope="row"
+                      className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-slate-300 capitalize"
                     >
-                      Edit
-                    </a>
+                      <span
+                        style={{
+                          color: `${
+                            val.createdBy.userName === state.userName
+                              ? "#ff6d00"
+                              : ""
+                          }`,
+                        }}
+                      >
+                        {val.createdBy.userName === state.userName
+                          ? "Self"
+                          : val.createdBy.userName}
+                      </span>
+                    </td>
+                  )}
+                  {/* action buttons */}
+                  <td className="px-6 py-4 flex justify-evenly items-center text-xl">
+                    {/* important  */}
+                    <span className="text-[24px] cursor-pointer hover:scale-110 transition-all">
+                      {!val.isResourceMustWatch ? (
+                        <button
+                          value={val._id}
+                          className="dark:text-slate-400 text-slate-800"
+                          onClick={() => handelImportant(val._id, true)}
+                        >
+                          <MdLabelImportantOutline />
+                        </button>
+                      ) : (
+                        <button
+                          value={val._id}
+                          className="text-yellow-600 "
+                          onClick={() => handelImportant(val._id, false)}
+                        >
+                          <MdLabelImportant />
+                        </button>
+                      )}
+                    </span>
+                    {/* fvrt start */}
+                    <span className=" cursor-pointer hover:scale-110 transition-all">
+                      {!val.isResourceUserFvrt ? (
+                        <span
+                          className="dark:text-slate-400 text-slate-800"
+                          onClick={() => handelFvrt(val._id, true)}
+                        >
+                          <FaRegStar />
+                        </span>
+                      ) : (
+                        <span
+                          className="text-green-700 "
+                          onClick={() => handelFvrt(val._id, false)}
+                        >
+                          <FaStar />
+                        </span>
+                      )}
+                    </span>
+
+                    {/* delete button icon */}
+                    {val.createdBy._id == state.userId ||
+                    state.accessType == "user" ? (
+                      <button
+                        value={val._id}
+                        className="text-red-700 cursor-pointer hover:scale-125 transition-all"
+                        onClick={resourceDeleteHandler}
+                      >
+                        <MdDelete />
+                      </button>
+                    ) : (
+                      // watch later icons as button
+                      <span className=" cursor-pointer hover:scale-110 transition-all text-[22px]">
+                        {!val.isResourceWatchLater ? (
+                          <span
+                            className="dark:text-slate-400 text-slate-800"
+                            onClick={() => handelWatchLater(val._id, true)}
+                          >
+                            <MdOutlineWatchLater />
+                          </span>
+                        ) : (
+                          <span
+                            className="text-[#00a5cf] "
+                            onClick={() => handelWatchLater(val._id, false)}
+                          >
+                            <MdWatchLater />
+                          </span>
+                        )}
+                      </span>
+                    )}
                   </td>
                 </tr>
               );
